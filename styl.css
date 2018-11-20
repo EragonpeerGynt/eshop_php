@@ -1,0 +1,77 @@
+h1 {
+    font-family: "Lucida Console", "Courier New";
+    font-size: 40px;
+    font-weight: bold;
+    position:relative;
+    margin-bottom: 40px;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+#main {
+    position:relative;
+    margin-right: auto;
+    width: 70%;
+}
+
+.book {
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+    min-height: 160px;
+    margin: 1em;
+    border: 1px solid black;
+    vertical-align: top;
+}
+
+#login {
+    position:absolute;
+    width: 100%;
+    text-align: center;
+    top:40%;
+}
+
+.succ {
+    color:#00ff00;
+}
+
+.error {
+    color:#ff0000;
+}
+
+.buton {
+    position:relative;
+    text-align: center;
+    top:20px;
+}
+
+.register {
+    color:#4444ff;
+    margin-bottom:20px;
+}
+
+#sidebar {
+    position:fixed;
+    width:25%;
+    top:0;
+    right:0px;
+    border: 1px solid black;
+    background-color: #E8E8E8;
+}
+
+.user {
+    top:10px;
+    line-height:150%;
+    text-align:right;
+    right:10px;
+    position:relative;
+    
+}
+
+h3 {
+    position:relative;
+    text-align: right;
+    top:20px;
+    right:10px;
+    margin-bottom: 30px;
+}
