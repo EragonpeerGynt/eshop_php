@@ -24,6 +24,26 @@ class DBBooks {
         
     }
     
+    public static function loadCart($id) {
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT id_book, amount FROM cart WHERE id_buyer = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        
+        return $statement->fetchAll();
+        
+    }
+
+    public static function deleteCart($id) {
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("DELETE FROM cart WHERE id_buyer = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        
+    }
+    
 }
 
 class DBUsers {
