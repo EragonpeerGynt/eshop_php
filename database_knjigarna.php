@@ -115,32 +115,43 @@ class DBUsers {
         $statement = $db->prepare("SELECT id_shopper FROM user WHERE id_shopper = :id AND u_pass = :pass AND u_name = :name");
         //u_name = :name AND u_pass = :pass AND 
         $statement->bindParam(":name", $user);
-        $statement->bindParam(":pass", $pass);
+        $hasher = DBUsers::getData($id)[0];
+        $salt = $hasher['u_name'] . $hasher['email'];
+        $passwd_hash = crypt($pass, $salt);
+        $statement->bindParam(":pass", $passwd_hash);
         $statement->bindParam(":id", $id);
         $statement->execute();
 
         return $statement->fetchAll();
     }
     
-    public static function updateAtribute($id, $value, $attribute) {
+    public static function updateAtribute($id, $value, $attribute, $pass) {
         $db = DBInit::getInstance();
         //$statement = $db->prepare("SELECT id_shopper FROM user WHERE u_name = :name AND u_pass = :pass AND id_shopper = :id");
+        $data = DBUsers::getData($id)[0];
+        $salt = $data['u_name'] . $data['email'];
+        $passwd = $pass;
         if ($attribute == "username") {
-            $statement = $db->prepare("UPDATE user SET u_name = :name WHERE id_shopper = :id");
+            $statement = $db->prepare("UPDATE user SET u_name = :name, u_pass = :pass WHERE id_shopper = :id");
             $statement->bindParam(":name", $value);
+            $salt = $value . $data['email'];
         }
         else if ($attribute == "passwd") {
             $statement = $db->prepare("UPDATE user SET u_pass = :pass WHERE id_shopper = :id");
-            $statement->bindParam(":pass", $value);
+            $passwd = $value;
         }
         else if ($attribute == "") {
-            $statement = $db->prepare("UPDATE user SET email = :mail WHERE id_shopper = :id");
+            $statement = $db->prepare("UPDATE user SET email = :mail, u_pass = :pass WHERE id_shopper = :id");
             $statement->bindParam(":mail", $value);
+            $salt = $data['name'] . $value;
         }
         else {
             return;
         }
         $statement->bindParam(":id", $id);
+        $passwd_hash = crypt($passwd, $salt);
+        $statement->bindParam(":pass", $passwd_hash);
+        
         $statement->execute();
     }
 

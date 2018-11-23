@@ -77,20 +77,22 @@ else if (isset($_POST['change']) && $_POST['change'] != "") { ?>
 <?php
 }
 else if (isset($_POST['commit']) && $_POST['commit'] != "") {
+    var_dump($_POST);
     require_once 'database_knjigarna.php';
     $fine = DBUsers::secureConnect($_SESSION['user_id'], $_SESSION['user'], $_POST['passwd']);
+    var_dump($fine);
     //var_dump($_SESSION);
     //var_dump($fine);
     if(count($fine) == 1) {
         if (isset($_POST['username'])) {
-            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['username'], $_POST['commit']);
+            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['username'], $_POST['commit'], $_POST['passwd']);
             $_SESSION['user'] = $_POST['username'];
         }
         else if (isset($_POST['passwd1']) && isset($_POST['passwd2']) && $_POST['passwd1'] == $_POST['passwd2']) {
-            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['passwd2'], $_POST['commit']);
+            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['passwd2'], $_POST['commit'], $_POST['passwd2']);
         }
         else if (isset($_POST['email'])) {
-            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['email'], $_POST['commit']);
+            DBUsers::updateAtribute($_SESSION['user_id'], $_POST['email'], $_POST['commit'], $_POST['passwd']);
         }
         ?>
         <html>
