@@ -27,11 +27,26 @@ class DBBooks {
     public static function loadCart($id) {
         
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT id_book, amount FROM cart WHERE id_buyer = :id");
+        $statement = $db->prepare("SELECT hasher FROM cart WHERE id_buyer = :id");
         $statement->bindParam(":id", $id);
         $statement->execute();
         
         return $statement->fetchAll();
+        
+    }
+    
+    public static function updateCart($id, $c_hash) {
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("DELETE FROM cart WHERE id_buyer = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        
+        $db2 = DBInit::getInstance();
+        $statement = $db2->prepare("INSERT INTO cart (id_buyer, hasher) VALUES (:id, :c_hash)");
+        $statement->bindParam(":id", $id);
+        $statement->bindParam(":c_hash", $c_hash);
+        $statement->execute();
         
     }
 
@@ -50,7 +65,7 @@ class DBUsers {
     
     public static function findUser($name) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT u_name FROM user WHERE u_name = :name");
+        $statement = $db->prepare("SELECT u_name, email FROM user WHERE u_name = :name");
         $statement->bindParam(":name", $name);
         $statement->execute();
 
@@ -60,18 +75,28 @@ class DBUsers {
     public static function fetchPass($name, $pass) {
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT id_shopper, status, hash FROM user WHERE u_name = :name AND u_pass = :pass");
+        $hasher = DBUsers::findUser($name)[0];
+        $salt = $hasher['u_name'] . $hasher['email'];
+        $passwd_hash = crypt($pass, $salt);
         $statement->bindParam(":name", $name);
-        $statement->bindParam(":pass", $pass);
-        $statement->execute();
+        $statement->bindParam(":pass", $passwd_hash);
+        try {
+            $statement->execute();
+        }
+        catch (Exception $exc) {
+            return [];
+        }
 
         return $statement->fetchAll();
     }
     
     public static function registerUser($name, $passwd, $mail) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("INSERT INTO user (u_name, u_pass, email, hash) VALUES (:u_name, :u_pass, :mail, user)");
+        $statement = $db->prepare("INSERT INTO user (u_name, u_pass, email, status) VALUES (:u_name, :u_pass, :mail, 'user')");
         $statement->bindParam(":u_name", $name);
-        $statement->bindParam(":u_pass", $passwd);
+        $salt = $name . $mail;
+        $passwd_hash = crypt($passwd, $salt);
+        $statement->bindParam(":u_pass", $passwd_hash);
         $statement->bindParam(":mail", $mail);
         $statement->execute();
     }

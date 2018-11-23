@@ -25,6 +25,10 @@ if (isset($_POST['do'])) {
             } else {
                 $_SESSION["cart"][$book['id_book']] = 1;
             }
+            if ($_SESSION['user_id'] != 'guest') {
+                $tmp_hash = serialize($_SESSION['cart']);
+                DBBooks::updateCart($_SESSION['user_id'], $tmp_hash);
+            }
         } catch (Exception $exc) {
             die($exc->getMessage());
         }
@@ -36,10 +40,17 @@ if (isset($_POST['do'])) {
             } else {
                 unset($_SESSION["cart"][$_POST["id"]]);
             }
+            if ($_SESSION['user_id'] != 'guest') {
+                $tmp_hash = serialize($_SESSION['cart']);
+                DBBooks::updateCart($_SESSION['user_id'], $tmp_hash);
+            }
         }
     }
     elseif ($_POST['do'] == "purge_cart") {
         unset($_SESSION["cart"]);
+        if ($_SESSION['user_id'] != 'guest') {
+            DBBooks::deleteCart($_SESSION['user_id']);
+        }
     }
 }
 
@@ -84,7 +95,7 @@ if (isset($_POST['do'])) {
                 if($_SESSION['user_id'] != "guest") {
                     ?>
                     <form action="./profile.php" method="post">
-                        Welcome<br/>
+                        Welcome 
                         <input type="hidden" name="iden" value="<?= $_SESSION['user_id'] ?>">
                         <input type="submit" name="edit" value="<?= $_SESSION['user'] ?>"><br/>
                         <input type="submit" name="edit" value="Logout"><br/>

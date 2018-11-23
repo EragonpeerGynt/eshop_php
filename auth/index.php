@@ -39,7 +39,7 @@ if ($cert_data['hash'] == $data[0]['hash']) {
     ?>
     <div id="login">
         <div class ="succ">
-            Authorization successful<br/>
+            Authorization successful as <?= $_SESSION['status'] ?><br/>
         </div>
         <form action="../index.php" method="get">
             <div class="buton">
@@ -53,7 +53,7 @@ else {
     //echo "failiure";
     ?>
     <div id="login">
-        <div class ="succ">
+        <div class ="error">
             Authorization failed<br/>
         </div>
         <form action="../index.php" method="get">
