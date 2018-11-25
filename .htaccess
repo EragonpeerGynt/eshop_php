@@ -6,3 +6,7 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule "^profile.php" "https://%{HTTP_HOST}%{REQUEST_URI}"
 
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule "^edit_contact.php" "https://%{HTTP_HOST}%{REQUEST_URI}"
+

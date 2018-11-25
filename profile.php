@@ -77,10 +77,10 @@ else if (isset($_POST['change']) && $_POST['change'] != "") { ?>
 <?php
 }
 else if (isset($_POST['commit']) && $_POST['commit'] != "") {
-    var_dump($_POST);
+    //var_dump($_POST);
     require_once 'database_knjigarna.php';
     $fine = DBUsers::secureConnect($_SESSION['user_id'], $_SESSION['user'], $_POST['passwd']);
-    var_dump($fine);
+    //var_dump($fine);
     //var_dump($_SESSION);
     //var_dump($fine);
     if(count($fine) == 1) {

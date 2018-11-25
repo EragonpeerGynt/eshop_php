@@ -103,7 +103,7 @@ class DBUsers {
     
     public static function getData($id) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT u_name, email, hash, status FROM user WHERE id_shopper = :id");
+        $statement = $db->prepare("SELECT u_name, email, hash, status, FROM user WHERE id_shopper = :id");
         $statement->bindParam(":id", $id);
         $statement->execute();
         
@@ -155,6 +155,15 @@ class DBUsers {
         $statement->execute();
     }
 
+    public static function getAllData($id) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT * FROM user WHERE id_shopper = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
+    
     /*public static function delete($id) {
         $db = DBInit::getInstance();
 
