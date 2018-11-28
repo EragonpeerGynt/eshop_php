@@ -90,6 +90,9 @@ if (isset($_POST['do'])) {
         ?>
         <br/>
         <div id="sidebar">
+            <div class="boxbox">
+                
+            
             <div class="user">
                 <?php
                 if($_SESSION['user_id'] != "guest") {
@@ -148,7 +151,7 @@ if (isset($_POST['do'])) {
             <?php endif; ?>
                 
                 
-                
+            </div>  
             </div>
         </div>
     </body>

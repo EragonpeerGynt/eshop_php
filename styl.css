@@ -55,6 +55,14 @@ h1 {
     width:25%;
     top:0;
     right:0px;
+}
+
+.boxbox {
+    position: fixed;
+    width: 25%;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
     border: 1px solid black;
     background-color: #E8E8E8;
 }
@@ -74,4 +82,12 @@ h3 {
     top:20px;
     right:10px;
     margin-bottom: 30px;
+}
+
+#edit {
+    position: fixed;
+    width: 20%;
+    top: 10px;
+    left: 10px;
+    margin: 20px;
 }

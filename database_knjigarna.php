@@ -173,6 +173,19 @@ class DBUsers {
         return $statement->fetchAll();
     }
     
+    public static function updateContact($id, $name, $surname, $phone, $street, $postal_number) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE user SET name = :name, surname = :surname, phone = :phone, street = :street, postal_number = :postal_number WHERE id_shopper = :id");
+        $statement->bindParam(":id", $id);
+        $statement->bindParam(":name",$name);
+        $statement->bindParam(":surname",$surname);
+        $statement->bindParam(":phone",$phone);
+        $statement->bindParam(":street",$street);
+        $statement->bindParam(":postal_number",$postal_number);
+        $statement->execute();
+    }
+
+
     /*public static function delete($id) {
         $db = DBInit::getInstance();
 

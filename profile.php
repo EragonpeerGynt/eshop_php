@@ -204,7 +204,13 @@ else {
                         <button type="submit" name="change" value="email">Change</button>
                     </form>
                 </div>
-             
+                
+                <div id="edit">
+                    <form action="./edit_contact.php">
+                        <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit contact<br/>information</button><br/>
+                    </form>
+                </div>
+            </body>             
         </html>
         <?php
     }
