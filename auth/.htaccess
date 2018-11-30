@@ -2,6 +2,6 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule "^index.php" "https://%{HTTP_HOST}%{REQUEST_URI}"
 
-SSLVerifyClient require
+SSLVerifyClient optional
 SSLVerifyDepth 1
 SSLOptions +ExportCertData

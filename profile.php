@@ -206,9 +206,18 @@ else {
                 </div>
                 
                 <div id="edit">
-                    <form action="./edit_contact.php">
+                    <form action="./edit_contact.php" method="post">
                         <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit contact<br/>information</button><br/>
                     </form>
+                    <?php
+                    if ($_SESSION['user_status'] == "admin" || $_SESSION['user_status'] == "seller") {
+                    ?>
+                    <form action="./edit_contact.php" method="post">
+                        <button type="submit" name="editorial" value="find_user">Edit user<br/>information</button><br/>
+                    </form>
+                    <?php
+                    }
+                    ?>
                 </div>
             </body>             
         </html>

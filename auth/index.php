@@ -34,12 +34,12 @@ $cert_data = openssl_x509_parse($client_cert);
 $commonname = (is_array($cert_data['subject']['CN']) ?
         $cert_data['subject']['CN'][0] : $cert_data['subject']['CN']);
 if ($cert_data['hash'] == $data[0]['hash']) {
-    $_SESSION['status'] = $data[0]['status'];
+    $_SESSION['user_status'] = $data[0]['status'];
     //echo "success";
     ?>
     <div id="login">
         <div class ="succ">
-            Authorization successful as <?= $_SESSION['status'] ?><br/>
+            Authorization successful as <?= $_SESSION['user_status'] ?><br/>
         </div>
         <form action="../index.php" method="get">
             <div class="buton">

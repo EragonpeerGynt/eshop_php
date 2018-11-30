@@ -185,6 +185,21 @@ class DBUsers {
         $statement->execute();
     }
 
+    public static function returnUsers() {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT u_name, id_shopper FROM user WHERE status = 'user'");
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
+    
+    public static function returnAllUsers() {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT u_name, id_shopper FROM user WHERE status = 'user' OR status = 'seller'");
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
 
     /*public static function delete($id) {
         $db = DBInit::getInstance();

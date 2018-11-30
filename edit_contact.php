@@ -79,18 +79,7 @@ function mainpage($all_data) {
                     <?php    
                     }
                     ?>
-                    <br/>    
-                    <?php
-                    if(isset($_POST['control']) && $_SESSION['status'] == "admin") {
-                    ?>
-                        <select name="sttus">
-                            <option value="admin">Admin</option>
-                            <option value="seller">Seller</option>
-                            <option value="user">User</option>
-                        </select><br/>
-                    <?php
-                    }
-                    ?>
+                    <br/>
                       
                     <input type="submit" name="editorial" value="Confirm"/><br/>
                 </form>
@@ -171,17 +160,7 @@ function errorEdit($errors) {
                         <input type="text" name="postal_number" value="<?= $_POST['postal_number'] ?>">
                         <input type="text" name="postal_town" value="<?= $kraj ?>"<br/>
                     <br/>    
-                    <?php
-                    if(isset($_POST['control']) && $_SESSION['status'] == "admin") {
-                    ?>
-                        <select name="sttus">
-                            <option value="admin">Admin</option>
-                            <option value="seller">Seller</option>
-                            <option value="user">User</option>
-                        </select><br/>
-                    <?php
-                    }
-                    ?>
+                    
                       
                     <input type="submit" name="editorial" value="Confirm"/><br/>
                 </form>
@@ -254,6 +233,50 @@ function errorReport($error) {
     <?php
 }
 
+function listUser() {
+    if ($_SESSION['user_status'] == 'admin') {
+        $operation = DBUsers::returnAllUsers();
+    }
+    elseif ($_SESSION['user_status'] == 'seller') {
+        $operation = DBUsers::returnUsers();
+    }
+    
+    else {
+        errorReport("");
+    }
+    
+    ?> 
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Users</title>
+        </head>
+        <body>
+            <div id="user">
+                <?php
+
+                foreach ($operation as $key => $uporabnik) {
+                    
+                    ?>
+                    <div class="singleU">
+                        <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                            <input type="hidden" name="control" value="<?= $uporabnik['id_shopper'] ?>" />
+                            <p><?= $uporabnik['u_name'] ?></p>
+                            <button type="submit">edit</button>
+                        </form>
+                    </div>                     
+                    <?php
+                    
+                }
+
+                ?>
+            </div>
+        </body>    
+    <?php
+    
+}
+
 function islegit() {
     $errars['legit'] = 1;
     if(!isset($_POST['name']) || $_POST['name'] == "") {
@@ -288,7 +311,7 @@ if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user
     errorReport("");
 }
 
-elseif (isset($_POST['editorial'])) {
+elseif (isset($_POST['editorial']) && $_POST['editorial'] == "Confirm") {
     $lister = islegit();
     if($lister['legit'] == 0) {
         errorEdit($lister);
@@ -298,15 +321,19 @@ elseif (isset($_POST['editorial'])) {
     }
 }
 
+elseif (isset($_POST['editorial']) && $_POST['editorial'] == "find_user") {
+    listUser();
+}
+
 else {
     if(isset($_SESSION['mockup'])) {
         unset($_SESSION['mockup']);
     }
     $identification = $_SESSION['user_id'];
-    if (isset($_POST['control']) && ($_SESSION['status'] == "admin" || $_SESSION['status'] == "seller")) {
+    if (isset($_POST['control']) && ($_SESSION['user_status'] == "admin" || $_SESSION['user_status'] == "seller")) {
         $analyse = DBUsers::getData($_POST['control'])[0];
-        if ($analyse['status'] == "user" || ($_SESSION['status'] == "seller" && ($analyse['status'] == "admin" || $analyse['status'] == "seller"))) {
-            $statement = "as " . $_SESSION['status'] . "<br/>you cannot edit data of equal or higher status (" . $analyse['status'] . ")";
+        if ($_SESSION['user_status'] == "user" || ($_SESSION['user_status'] == "seller" && ($analyse['status'] == "admin" || $analyse['status'] == "seller"))) {
+            $statement = "as " . $_SESSION['user_status'] . "<br/>you cannot edit data of equal or higher status (" . $analyse['status'] . ")";
             errorReport($statement);
             exit();
         }
