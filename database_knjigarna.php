@@ -13,10 +13,19 @@ class DBBooks {
         return $statement->fetchAll();
     }
     
+    public static function getMyBooks($id) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_seller = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+
+        return $statement->fetchAll();
+    }
+    
     public static function getBook($id) {
         
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_book = :id");
+        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name, library.id_seller FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_book = :id");
         $statement->bindParam(":id", $id);
         $statement->execute();
 
