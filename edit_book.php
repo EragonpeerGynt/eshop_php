@@ -35,6 +35,7 @@ function errorReport($error) {
             <title>ERROR</title>
         </head>
         
+        <body>
             <div id="login">
                 <div class="error">
                     There seems to be an error
@@ -47,14 +48,33 @@ function errorReport($error) {
                     <button type="submit">Continue</button>
                 </form>
             </div>
-             
         </body>
     </html>
     <?php
 }
 
-function editbook() {
-    
+function editbook($book) {
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Edit: <?= $book['title'] ?></title>
+        </head>
+        <body>
+            <div id="login">
+                <h1>Edit book</h1>
+                <form>
+                    <input type="hidden" name="id_book" value="<?= $book['id_book'] ?>"/>
+                    <textarea rows="2" cols="60" name="author"></textarea><br />
+                    <textarea rows="2" cols="60" name="title"></textarea><br />
+                    <textarea rows="8" cols="60" name="description"></textarea><br />
+                    <button type="submit" name="push_book" value="old">Save</button>
+                </form>
+            </div>
+        </body>
+    </html>
+    <?php
 }
 
 session_start();
@@ -99,7 +119,7 @@ if (isset($_POST['editorial']) && $_POST['editorial'] == $_SESSION['user_id'] &&
 elseif (isset($_GET['id_edit'])) {
     $book = DBBooks::getBook($_GET['id_edit'])[0];
     if ($_SESSION['user_status'] == 'admin' || $book['id_seller'] == $_SESSION['user_id']) {
-        
+        editbook($book);
     }
     else {
         errorReport('<br/>You are not authorized to edit<br/>'.$book['title'].' by '.$book['author_name']);

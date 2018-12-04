@@ -33,7 +33,14 @@ class DBBooks {
         
     }
     
-    public static function loadCart($id) {
+    public static function delBook($id) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("DELETE FROM library WHERE id_book = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+    }
+
+        public static function loadCart($id) {
         
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT hasher FROM cart WHERE id_buyer = :id");

@@ -215,6 +215,7 @@ function errorReport($error) {
             <title>ERROR</title>
         </head>
         
+        <body>
             <div id="login">
                 <div class="error">
                     There seems to be an error

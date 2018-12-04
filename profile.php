@@ -220,7 +220,7 @@ else {
                     if ($_SESSION['user_status'] == "admin" || $_SESSION['user_status'] == "seller") {
                     ?>
                     <form action="./edit_book.php" method="post">
-                        <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit my<br/>published<br/>books<br/>information</button><br/>
+                        <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit my<br/>published<br/>books<br/>information<br/>or add new<br/>book</button><br/>
                     </form>
                     <?php
                     }
