@@ -66,9 +66,9 @@ function editbook($book) {
                 <h1>Edit book</h1>
                 <form>
                     <input type="hidden" name="id_book" value="<?= $book['id_book'] ?>"/>
-                    <textarea rows="2" cols="60" name="author"></textarea><br />
-                    <textarea rows="2" cols="60" name="title"></textarea><br />
-                    <textarea rows="8" cols="60" name="description"></textarea><br />
+                    <textarea rows="2" cols="60" name="author"><?= $book['author_name'] ?></textarea><br />
+                    <textarea rows="2" cols="60" name="title"><?= $book['title'] ?></textarea><br />
+                    <textarea rows="8" cols="60" name="description"><?= $book['description'] ?></textarea><br />
                     <button type="submit" name="push_book" value="old">Save</button>
                 </form>
             </div>
