@@ -39,8 +39,56 @@ class DBBooks {
         $statement->bindParam(":id", $id);
         $statement->execute();
     }
+    
+    public static function updateBook($id, $title, $author, $description, $price) {
+        $id_auth = DBBooks::getAuthor($author);
+        if (count($id_auth) == 0) {
+            $id_auth = DBBooks::generateAuthor($author);
+        }
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE library SET title = :title, description = :description, price = :price, id_author = :id_author WHERE id_book = :book");
+        $statement->bindParam(":title", $title);
+        $statement->bindParam(":description", $description);
+        $statement->bindParam(":price", $price);
+        $statement->bindParam(":id_author", $id_auth[0]['id_author']);
+        $statement->bindParam(":book", $id);
+        $statement->execute();
+    }
+    
+    public static function createBook($title, $author, $description, $price, $seller) {
+        $id_auth = DBBooks::getAuthor($author);
+        if (count($id_auth) == 0) {
+            $id_auth = DBBooks::generateAuthor($author);
+        }
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("INSERT INTO library (title, description, price, id_author, id_seller) VALUES (:title, :description, :price, :id_author, :id_seller)");
+        $statement->bindParam(":title", $title);
+        $statement->bindParam(":description", $description);
+        $statement->bindParam(":price", $price);
+        $statement->bindParam(":id_author", $id_auth[0]['id_author']);
+        $statement->bindParam(":id_seller", $seller);
+        $statement->execute();
+    }
+    
+    public static function generateAuthor($name) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("INSERT INTO author (author_name) VALUES (:name); SELECT id_author FROM author WHERE author_name = :name");
+        $statement->bindParam(":name", $name);
+        $statement->execute();
 
-        public static function loadCart($id) {
+        return $statement->fetchAll();
+    }
+    
+    public static function getAuthor($name) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT id_author FROM author WHERE author_name = :name");
+        $statement->bindParam(":name", $name);
+        $statement->execute();
+
+        return $statement->fetchAll();
+    }
+
+    public static function loadCart($id) {
         
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT hasher FROM cart WHERE id_buyer = :id");
