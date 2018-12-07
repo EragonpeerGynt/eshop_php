@@ -62,16 +62,23 @@ if (isset($_POST['do'])) {
         <title>e-knjigarna</title>
     </head>
     <body>
-        <h1>E-Knjigarna</h1>
+        
         <!--izpišemo vse knjige-->
         <div id="main">
+            <div class="empty">
+                
+            </div>
             <?php
             try {
                 $all_books = DBBooks::getAllBooks();
             } catch (Exception $e) {
                 echo "Prišlo je do napake: {$e->getMessage()}";
             } ?>
-            <?php foreach ($all_books as $tmp => $knjiga): ?>
+            <?php foreach ($all_books as $tmp => $knjiga):
+                if ($knjiga['hidden'] == 1) {
+                    continue;
+                }
+                ?>
                 <div class="book">
                     <form action="<?= $url ?>" method="post">
                         <input type="hidden" name="do" value="add_into_cart" />
@@ -89,9 +96,8 @@ if (isset($_POST['do'])) {
         echo "Delam"
         ?>
         <br/>
-        <div id="sidebar">
-            <div class="boxbox">
-                
+        <div id="heder">
+            <div class="hed1">E-Knjigarna</div>
             
             <div class="user">
                 <?php
@@ -100,7 +106,7 @@ if (isset($_POST['do'])) {
                     <form action="./profile.php" method="post">
                         Welcome 
                         <input type="hidden" name="iden" value="<?= $_SESSION['user_id'] ?>">
-                        <input type="submit" name="edit" value="<?= $_SESSION['user'] ?>"><br/>
+                        <input type="submit" name="edit" value="<?= $_SESSION['user'] ?>">
                         <input type="submit" name="edit" value="Logout"><br/>
                     </form>
                     <?php
@@ -108,13 +114,19 @@ if (isset($_POST['do'])) {
                 else {
                     ?>
                     <form action="./login.php" method="post">
-                        Welcome<br/><?= $_SESSION['user'] ?><br/>
+                        Welcome <?= $_SESSION['user'] ?>
                         <input type="submit" name="edit" value="Login/Register"><br/>
                     </form>
                     <?php
                 }
                 ?>
             </div>
+        
+        <div id="sidebar">
+            <div class="boxbox">
+                
+            
+            
             
             <div class="vozi">
                 <?php
@@ -153,6 +165,7 @@ if (isset($_POST['do'])) {
                 
             </div>  
             </div>
+        </div>
         </div>
     </body>
 </html>

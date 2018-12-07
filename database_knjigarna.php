@@ -7,7 +7,7 @@ class DBBooks {
     public static function getAllBooks() {
         $db = DBInit::getInstance();
 
-        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name FROM library INNER JOIN author ON author.id_author = library.id_author");
+        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name, library.hidden FROM library INNER JOIN author ON author.id_author = library.id_author");
         $statement->execute();
 
         return $statement->fetchAll();
@@ -25,7 +25,7 @@ class DBBooks {
     public static function getBook($id) {
         
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name, library.id_seller FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_book = :id");
+        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name, library.id_seller, library.hidden FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_book = :id");
         $statement->bindParam(":id", $id);
         $statement->execute();
 
@@ -40,33 +40,42 @@ class DBBooks {
         $statement->execute();
     }
     
-    public static function updateBook($id, $title, $author, $description, $price) {
+    public static function updateBook($id, $title, $author, $description, $price, $hidden) {
         $id_auth = DBBooks::getAuthor($author);
         if (count($id_auth) == 0) {
             $id_auth = DBBooks::generateAuthor($author);
         }
         $db = DBInit::getInstance();
-        $statement = $db->prepare("UPDATE library SET title = :title, description = :description, price = :price, id_author = :id_author WHERE id_book = :book");
+        $statement = $db->prepare("UPDATE library SET title = :title, description = :description, price = :price, id_author = :id_author, hidden = :hidden WHERE id_book = :book");
         $statement->bindParam(":title", $title);
         $statement->bindParam(":description", $description);
         $statement->bindParam(":price", $price);
         $statement->bindParam(":id_author", $id_auth[0]['id_author']);
+        $statement->bindParam(":hidden", $hidden);
         $statement->bindParam(":book", $id);
         $statement->execute();
     }
     
-    public static function createBook($title, $author, $description, $price, $seller) {
+    public static function createBook($title, $author, $description, $price, $seller, $hidden) {
         $id_auth = DBBooks::getAuthor($author);
         if (count($id_auth) == 0) {
             $id_auth = DBBooks::generateAuthor($author);
         }
         $db = DBInit::getInstance();
-        $statement = $db->prepare("INSERT INTO library (title, description, price, id_author, id_seller) VALUES (:title, :description, :price, :id_author, :id_seller)");
+        $statement = $db->prepare("INSERT INTO library (title, description, price, id_author, id_seller, hidden) VALUES (:title, :description, :price, :id_author, :id_seller, :hidden)");
         $statement->bindParam(":title", $title);
         $statement->bindParam(":description", $description);
         $statement->bindParam(":price", $price);
         $statement->bindParam(":id_author", $id_auth[0]['id_author']);
         $statement->bindParam(":id_seller", $seller);
+        $statement->bindParam(":hidden", $hidden);
+        $statement->execute();
+    }
+    
+    public static function deleteBook($id) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("DELETE FROM library WHERE id_book = :id");
+        $statement->bindParam(":id", $id);
         $statement->execute();
     }
     

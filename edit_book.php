@@ -82,12 +82,26 @@ function editbook($book) {
                     <textarea rows="8" cols="60" name="description"><?= $book['description'] ?></textarea><br />
                     Price: <br/>
                     <input type="text" name="price" value="<?= $book['price'] ?>" align="right">€<br/>
+                    <input type="checkbox" name="hidden" value="visible"<?= isVisible($book['hidden']) ?>>Visible<br/>
                     <button type="submit" name="push_book" value="old">Save</button>
+                    <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                        <input type="hidden" name="id_book" value="<?= $book['id_book'] ?>"/>
+                        <button type="submit" name="push_book" value="del">Delete</button>
+                    </form>
                 </form>
             </div>
         </body>
     </html>
     <?php
+}
+
+function isVisible($visibility) {
+    if($visibility == 0) {
+        return " checked";
+    }
+    else {
+        return "";
+    }
 }
 
 function addBook() {
@@ -111,6 +125,7 @@ function addBook() {
                     <textarea rows="8" cols="60" name="description" required></textarea><br />
                     Price: <br/>
                     <input type="text" name="price" align="right" required>€<br/>
+                    <input type="checkbox" name="hidden" value="visible" checked>Visible<br/>
                     <button type="submit" name="push_book" value="new">Save</button>
                 </form>
             </div>
@@ -202,13 +217,30 @@ elseif (isset($_GET['new_book'])) {
 }
 
 elseif (isset ($_POST['push_book']) && $_POST['push_book'] == 'old') {
-    DBBooks::updateBook($_POST['id_book'], $_POST['title'], $_POST['author'], $_POST['description'], $_POST['price']);
+    if (isset($_POST['hidden'])) {
+        $hidden = 0;
+    }
+    else {
+        $hidden = 1;
+    }
+    DBBooks::updateBook($_POST['id_book'], $_POST['title'], $_POST['author'], $_POST['description'], $_POST['price'], $hidden);
     success("edited book");
 }
 
 elseif (isset ($_POST['push_book']) && $_POST['push_book'] == 'new') {
-    DBBooks::createBook($_POST['title'], $_POST['author'], $_POST['description'], $_POST['price'], $_POST['id_seller']);
+    if (isset($_POST['hidden'])) {
+        $hidden = 0;
+    }
+    else {
+        $hidden = 1;
+    }
+    DBBooks::createBook($_POST['title'], $_POST['author'], $_POST['description'], $_POST['price'], $_POST['id_seller'], $hidden);
     success("added book");
+}
+
+elseif (isset ($_POST['push_book']) && $_POST['push_book'] == 'del') {
+    DBBooks::deleteBook($_POST['id_book']);
+    success("deleted book");
 }
 
 /* 
