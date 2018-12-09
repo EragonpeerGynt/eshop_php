@@ -158,6 +158,10 @@ if (isset($_POST['do'])) {
                     <input type="hidden" name="do" value="purge_cart" />
                     <input type="submit" value="Izprazni košarico" />
                 </form>
+                <form action="./checkout.php" method="POST">
+                    <input type="hidden" name="checkout" value="checkout" />
+                    <input type="submit" value="Checkout" />
+                </form>
             <?php else: ?>
                 <h3>Shopping cart is empty</h3>                
             <?php endif; ?>
