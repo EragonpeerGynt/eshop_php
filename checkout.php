@@ -7,6 +7,31 @@ function userSet($user) {
     return false;
 }
 
+function islegit() {
+    $errars['legit'] = 1;
+    if(!isset($_POST['name']) || $_POST['name'] == "") {
+        $errars['name'] = 1;
+        $errars['legit'] = 0;
+    }
+    if(!isset($_POST['surname']) || $_POST['surname'] == "") {
+        $errars['surname'] = 1;
+        $errars['legit'] = 0;
+    }
+    if(!isset($_POST['phone']) || $_POST['phone'] == "") {
+        $errars['phone'] = 1;
+        $errars['legit'] = 0;
+    }
+    if(!isset($_POST['street']) || $_POST['street'] == "") {
+        $errars['street'] = 1;
+        $errars['legit'] = 0;
+    }
+    if(!isset($_POST['postal_number']) || $_POST['postal_number'] == "") {
+        $errars['postal_number'] = 1;
+        $errars['legit'] = 0;
+    }
+    return $errars;
+}
+
 function checkingBuy($user) {
     $all_data = $user;
     ?>
@@ -114,9 +139,41 @@ function checkingBuy($user) {
                     }
                     ?>
                     <br/>
-                      
+                    <input type="hidden" name="final" value="final"/>
                     <input type="submit" name="editorial" value="Confirm"/><br/>
                 </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
+function succEdit() {
+    $iden = $_SESSION['user_id'];
+    DBUsers::updateContact($iden, $_POST['name'], $_POST['surname'], $_POST['phone'], $_POST['street'], $_POST['postal_number']);
+    DBOrders::submitOrder($iden, $_SESSION['cart']);
+}
+
+function gibBooks() {
+    unset($_SESSION['cart']);
+    DBBooks::deleteCart($_SESSION['user_id']);
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Checkout</title>
+        </head>
+        <body>
+            <div id="login">
+                <div class="succ">
+                    You have succesfully submited your order<br/>
+                </div>
+                <div class="buton">
+                    <form action="./index.php" method="get">
+                        <button type="submit">Continue</button>
+                    </form>
+                </div>
             </div>
         </body>
     </html>
@@ -190,10 +247,21 @@ if (isset($_POST['do'])) {
         }
     }
 }
-
+//var_dump($_POST);
 $user = DBUsers::getAllData($_SESSION['user_id'])[0];
 if (isset($_POST['checkout']) && isset($_SESSION['cart']) && $_SESSION['cart'] != []) {
     checkingBuy($user);
+}
+elseif (isset ($_POST['final']) && $_POST['final'] == 'final') {
+    //echo "going to final stage";
+    $data = islegit();
+    if ($data['legit'] == 1) {
+        succEdit();
+        gibBooks();
+    }
+    else {
+        checkingBuy($user);
+    }
 }
 elseif (!isset($_SESSION['cart']) || $_SESSION['cart'] == []) {
     $redirect = "https://" . $_SERVER['HTTP_HOST'] . "/netbeans/eshop/index.php";

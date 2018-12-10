@@ -14,7 +14,7 @@ if(!isset($_SESSION['user'])) {
 
 require_once 'database_knjigarna.php';
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
-
+//var_dump($_SESSION['cart']);
 if (isset($_POST['do'])) {
     if ($_POST['do'] == "add_into_cart") {
         try {

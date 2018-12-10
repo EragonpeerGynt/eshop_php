@@ -81,7 +81,12 @@ class DBBooks {
     
     public static function generateAuthor($name) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("INSERT INTO author (author_name) VALUES (:name); SELECT id_author FROM author WHERE author_name = :name");
+        $statement = $db->prepare("INSERT INTO author (author_name) VALUES (:name)");
+        $statement->bindParam(":name", $name);
+        $statement->execute();
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT id_author FROM author WHERE author_name = :name");
         $statement->bindParam(":name", $name);
         $statement->execute();
 
@@ -314,5 +319,30 @@ class DBUsers {
         $statement->execute();
     }*/
 
+}
+
+class DBOrders {
+    public static function submitOrder($id_shopper, $cart) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("INSERT INTO orders (id_buyer) VALUES (:id_buyer)");
+        $statement->bindParam(":id_buyer", $id_shopper);
+        $statement->execute();
+        
+        $id_order = $db->lastInsertId();
+        foreach ($cart as $bukva=>$quantity) {
+            DBOrders::fractionOrder($id_order, $bukva, $quantity);
+        }
+    }
+    
+    public static function fractionOrder($id_order, $bukva, $quantity) {
+        $id_seller = DBBooks::getBook($bukva)[0]['id_seller'];
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("INSERT INTO ord_items (id_order, id_seller, id_book, quantity) VALUES (:id_order, :id_seller, :id_book, :quantity)");
+        $statement->bindParam(":id_order", $id_order);
+        $statement->bindParam(":id_seller", $id_seller);
+        $statement->bindParam(":id_book", $bukva);
+        $statement->bindParam(":quantity", $quantity);
+        $statement->execute();
+    }
 }
 
