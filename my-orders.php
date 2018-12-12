@@ -1,5 +1,34 @@
 <?php
 
+function status($data) {
+    $chooser[0] = '';
+    $chooser[1] = ' book--green';
+    $chooser[2] = ' book--red';
+    echo $chooser[$data];
+}
+
+function complete($id_o) {
+    $ord = DBOrders::getSingleHistory($_SESSION['user_id'], $id_o);
+    foreach ($ord as $key => $raw) {
+        if($raw['status'] == 0 || $raw['status'] == 2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function orderCancel($order_id, $order_canceled) {
+    if (complete($order_id)) {
+        return " order--complete";
+    }
+    elseif ($order_canceled == 1) {
+        return " order--cancel";
+    }
+    else {
+        return "";
+    }
+}
+
 function orderinos($data) {
 ?>
 <html>
@@ -10,15 +39,30 @@ function orderinos($data) {
     </head>
     <body>
         <div id="main">
+            <div>
             <?php
             $prev = -1;
             foreach($data as $key => $raw) {
                 if ($prev != $raw['id_order']) {
                     $prev = $raw['id_order'];
-                    echo "<br/><br/>order tracking number: ".$raw['id_order']."<br/>";
+                    ?>
+                    </div>
+                    <?php
+                    echo "<br/><br/>";
+                    echo '<div class="order'.orderCancel($prev, $raw['canceled']).'">';
+                    echo "order tracking number: ".$raw['id_order']."<br/>";
+                    if (orderCancel($prev, $raw['canceled']) == "") {
+                        ?>
+                        <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                            <input type="hidden" name="history" value="1">
+                            <input type="hidden" name="terminate" value="<?= $raw['id_order'] ?>">
+                            <input type="submit" value="Cancel order">
+                        </form>
+                        <?php
+                    }
                 }
                 ?>
-                <div class="book">
+                <div class="book<?= status($raw['status']) ?>">
                     <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
                         <input type="hidden" name="id" value="<?= $raw["id_book"] ?>" />
                         <p><?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
@@ -28,6 +72,7 @@ function orderinos($data) {
             <?php
             }
             ?>
+        </div>
         </div>
     </body>
 </html>
@@ -73,7 +118,11 @@ if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user
     exit();
 }
 
-$_POST['history'] = 1;
+//$_POST['history'] = 1;
+
+if (isset($_POST['terminate'])) {
+    DBOrders::cancelOrder($_POST['terminate']);
+}
 
 if (isset($_POST['history'])) {
     $ord = DBOrders::getHistory($_SESSION['user_id']);

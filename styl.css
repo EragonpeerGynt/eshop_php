@@ -66,6 +66,24 @@ textarea {
     border: 1px solid black;
     vertical-align: top;
 }
+.book--green{
+    background: #408000;
+}
+.book--red {
+    background: #ff3333;
+}
+
+.order {
+    background: #ffffff;
+}
+
+.order--complete {
+    background: #408000;
+}
+
+.order--cancel {
+    background: #cccccc;
+}
 
 #login {
     position:absolute;

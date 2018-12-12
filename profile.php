@@ -210,6 +210,13 @@ else {
                         <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit contact<br/>information</button><br/>
                     </form>
                     <?php
+                    if ($_SESSION['user_status'] == 'user') {
+                    ?>
+                    <form action="./my-orders.php" method="post">
+                        <button type="submit" name="history" value="1">View order<br/>history</button><br/>
+                    </form>
+                    <?php
+                    }
                     if ($_SESSION['user_status'] == "admin" || $_SESSION['user_status'] == "seller") {
                     ?>
                     <form action="./edit_contact.php" method="post">

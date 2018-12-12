@@ -347,11 +347,28 @@ class DBOrders {
     
     public static function getHistory($id) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE orders.id_buyer = :id ORDER BY orders.id_order, library.id_book ASC");
+        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE orders.id_buyer = :id ORDER BY orders.id_order, library.id_book ASC");
         $statement->bindParam(":id", $id);
         $statement->execute();
         
         return $statement->fetchAll();
+    }
+    
+    public static function getSingleHistory($id, $id_o) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE orders.id_buyer = :id AND ord_items.id_order = :id_o ORDER BY orders.id_order, library.id_book ASC");
+        $statement->bindParam(":id", $id);
+        $statement->bindParam(":id_o", $id_o);
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
+    
+    public static function cancelOrder($id) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE orders SET canceled = 1 WHERE id_order = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
     }
 }
 
