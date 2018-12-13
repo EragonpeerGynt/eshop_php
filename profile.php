@@ -231,6 +231,13 @@ else {
                     </form>
                     <?php
                     }
+                    if ($_SESSION['user_status'] == 'seller' || $_SESSION['user_status'] == 'admin') {
+                    ?>
+                    <form action="./my-orders.php" method="post">
+                        <button type="submit" name="pending" value="1">View<br/>pending<br/>orders</button><br/>
+                    </form>
+                    <?php
+                    }
                     ?>
                 </div>
                 

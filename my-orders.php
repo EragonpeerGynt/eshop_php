@@ -130,3 +130,8 @@ if (isset($_POST['history'])) {
     orderinos($ord);
 }
 
+if (isset($_POST['pending']) && ($_SESSION['user_status'] == 'seller' || $_SESSION['user_status'] == 'admin')) {
+    $ord = DBOrders::getPending($_SESSION['user_id']);
+    var_dump($ord);
+}
+
