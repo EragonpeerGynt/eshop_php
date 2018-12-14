@@ -234,6 +234,39 @@ function errorReport($error) {
     <?php
 }
 
+function add_user($prefix) {
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Registration</title>
+        </head>
+        
+        <body>
+            <div id="login">
+            <?php
+            if ($prefix != "") {
+                echo $prefix . "<br/>";
+            }
+            ?>
+            <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                User name:<br/>
+                <input type="text" name="uname" placeholder="user name" required=><br/>
+                Password<br/>
+                <input type="password" name="passwd" placeholder="password" required><br/>
+                Re-type password<br/>
+                <input type="password" name="repasswd" placeholder="password" required><br/>
+                E-mail<br/>
+                <input type="text" name="email" placeholder="abc@def.com" required><br/>
+                <button type="submit" name="another" value="1">REGISTER</button>
+            </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
 function listUser() {
     if ($_SESSION['user_status'] == 'admin') {
         $operation = DBUsers::returnAllUsers();
@@ -272,10 +305,54 @@ function listUser() {
                 }
 
                 ?>
+                <div class="singleU">
+                    <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                        <input type="hidden" name="addition" value="new_user" />
+                        <p>New user</p>
+                        <button type="submit">ADD</button>
+                    </form>
+                </div>  
             </div>
         </body>    
     <?php
     
+}
+
+function additionU() {
+    DBUsers::registerUser($_POST['uname'], $_POST['passwd'], $_POST['email']);
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Users</title>
+        </head>
+        <body>
+            <div id="login">
+                <div class="succ">
+                    registration was successful<br/>
+                </div>
+                <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                    <input type="hidden" name="editorial" value="find_user">
+                    <input type="submit" name="bttn" value="Login" /><br/>
+                </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
+function dataOk() {
+    if(!isset($_POST['uname'])) {
+        return FALSE;
+    }
+    if(!isset($_POST['passwd']) || !isset($_POST['repasswd']) || $_POST['passwd'] != $_POST['repasswd'] ) {
+        return FALSE;
+    }
+    if(!isset($_POST['email'])) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 function islegit() {
@@ -324,6 +401,19 @@ elseif (isset($_POST['editorial']) && $_POST['editorial'] == "Confirm") {
 
 elseif (isset($_POST['editorial']) && $_POST['editorial'] == "find_user") {
     listUser();
+}
+
+elseif (isset($_POST['addition']) && $_POST['addition'] == 'new_user') {
+    add_user("");
+}
+
+elseif (isset ($_POST['another'])) {
+    if(dataOk()) {
+        additionU();
+    }
+    else {
+        add_user("Not all data set correctly");
+    }
 }
 
 else {

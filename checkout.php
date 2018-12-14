@@ -47,7 +47,7 @@ function checkingBuy($user) {
             if ($s_cart) {
             $total = 0;
             }
-
+            
             foreach ($s_cart as $id => $amount):
                 $book = DBBooks::getBook($id)[0];
                 $total += $book['price'] * $amount;
