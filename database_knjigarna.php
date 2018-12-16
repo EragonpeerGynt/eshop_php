@@ -232,6 +232,22 @@ class DBUsers {
         
         $statement->execute();
     }
+    
+    public static function updateAllAtributes($id, $uname, $email, $pass) {
+        $salt = $uname . $email;
+        $passwd = $pass;
+        $passwd_hash = crypt($passwd, $salt);
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE user SET u_name = :name, email = :email, u_pass = :pass WHERE id_shopper = :id");
+        $statement->bindParam(":name", $uname);
+        $statement->bindParam(":email", $email);
+        $statement->bindParam(":pass", $passwd_hash);
+        $statement->bindParam(":id", $id);
+        
+        $statement->execute();
+        
+    }
 
     public static function getAllData($id) {
         $db = DBInit::getInstance();
@@ -375,6 +391,41 @@ class DBOrders {
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE ord_items.id_seller = :id ORDER BY orders.canceled, orders.id_order, library.id_book ASC");
         $statement->bindParam(":id", $id);
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
+    
+    public static function orderFinished($id_order, $id_seller) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE ord_items SET status = 1 WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement->bindParam(":id_order", $id_order);
+        $statement->bindParam(":id_seller", $id_seller);
+        $statement->execute();
+    }
+    
+    public static function orderDeny($id_order, $id_seller) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("UPDATE ord_items SET status = 2 WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement->bindParam(":id_order", $id_order);
+        $statement->bindParam(":id_seller", $id_seller);
+        $statement->execute();
+    }
+    
+    public static function currStatus($id_order) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT canceled FROM orders WHERE id_order = :id");
+        $statement->bindParam(":id", $id_order);
+        $statement->execute();
+        
+        return $statement->fetchAll();
+    }
+    
+    public static function doingMyPart($id_seller, $id_order) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT * FROM ord_items WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement->bindParam(":id_order", $id_order);
+        $statement->bindParam(":id_seller", $id_seller);
         $statement->execute();
         
         return $statement->fetchAll();

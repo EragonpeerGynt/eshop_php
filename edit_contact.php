@@ -1,5 +1,15 @@
 <?php
 
+function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+{
+    $pieces = [];
+    $max = strlen($keyspace) - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $pieces []= $keyspace[random_int(0, $max)];
+    }
+    return implode('', $pieces);
+}
+
 function mainpage($all_data) {
     ?>
     <html>
@@ -83,6 +93,21 @@ function mainpage($all_data) {
                       
                     <input type="submit" name="editorial" value="Confirm"/><br/>
                 </form>
+                <?php
+                if(isset($_SESSION['mockup'])) {
+                    ?>
+                    <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                        Reset password and edit basic information<br/>
+                        Username<br/>
+                        <input type="text" name="uname" value="<?= $all_data['u_name'] ?>"><br/>
+                        Email<br/>
+                        <input type="text" name="email" value="<?= $all_data['email'] ?>"><br/>
+                        <input type="hidden" name="passwd" value="<?= random_str(10) ?>">
+                        <button type="submit" name="basic" value="1">Change</button>
+                    </form><br/>
+                    <?php
+                }
+                ?>
             </div>
             <div id="edit">
                 <form action="./index.php">
@@ -169,6 +194,32 @@ function errorEdit($errors) {
                 <form action="./index.php">
                     <button type="submit">Home</button><br/>
                 </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
+function succEditData($secret) {
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Updated</title>
+        </head>
+        <body>
+            <div id="login">
+                <div class="succ">
+                    You have succesfully updated user's login information<br/>
+                    Their new password is:<br/>
+                    <?= $secret ?><br/>
+                </div>
+                <div class="buton">
+                    <form action="./index.php" method="get">
+                        <button type="submit">Continue</button>
+                    </form>
+                </div>
             </div>
         </body>
     </html>
@@ -414,6 +465,11 @@ elseif (isset ($_POST['another'])) {
     else {
         add_user("Not all data set correctly");
     }
+}
+
+elseif (isset($_POST['basic'])) {
+    DBUsers::updateAllAtributes($_SESSION['mockup'], $_POST['uname'], $_POST['email'], $_POST['passwd']);
+    succEditData($_POST['passwd']);
 }
 
 else {

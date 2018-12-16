@@ -85,6 +85,10 @@ textarea {
     background: #cccccc;
 }
 
+.order--deny {
+    background: #ff3333;
+}
+
 #login {
     position:absolute;
     width: 100%;

@@ -29,6 +29,86 @@ function orderCancel($order_id, $order_canceled) {
     }
 }
 
+function checkerMine($id_seller, $id_order) {
+    $tmp = DBOrders::doingMyPart($id_seller, $id_order);
+    foreach ($tmp as $key => $raw) {
+        if($raw['status'] == 0) {
+            return "";
+        }
+        elseif($raw['status'] == 1) {
+            return " order--complete";
+        }
+        elseif($raw['status'] == 2) {
+            return " order--deny";
+        }
+    }
+    
+    return "";
+}
+
+function orderSubmited($id_o, $id_s) {
+    $tmp = DBOrders::currStatus($id_o)[0];
+    if($tmp['canceled'] == 1) {
+        return " order--cancel";
+    }
+    else {
+        return checkerMine($id_s, $id_o);
+    }
+    
+}
+
+function getItDone($data) {
+    ?>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styl.css">
+        <meta charset="UTF-8" />
+        <title>e-knjigarna</title>
+    </head>
+    <body>
+        <div id="main">
+            <div>
+            <?php
+            $prev = -1;
+            foreach($data as $key => $raw) {
+                if ($prev != $raw['id_order']) {
+                    $prev = $raw['id_order'];
+                    ?>
+                    </div>
+                    <?php
+                    echo "<br/><br/>";
+                    echo orderSubmited($raw['id_order'], $_SESSION['user_id']).'<br/>';
+                    echo '<div class="order'. orderSubmited($raw['id_order'], $_SESSION['user_id']).'">';
+                    echo "order tracking number: ".$raw['id_order']."<br/>";
+                    if (orderSubmited($raw['id_order'], $_SESSION['user_id']) == "") {    
+                        ?>
+                        <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                            <input type="hidden" name="history" value="1">
+                            <input type="hidden" name="id_order" value="<?= $raw['id_order'] ?>">
+                            <input type="submit" name="admin_control" value="Order complete"><input type="submit" name="admin_control" value="Cancel order">
+                        </form>
+                        <?php
+                    }
+                }
+                ?>
+                <div class="book<?= status($raw['status']) ?>">
+                    <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                        <input type="hidden" name="id" value="<?= $raw["id_book"] ?>" />
+                        <p><?= $raw['quantity'] ?> <?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
+                        <p><?= number_format($raw["price"], 2) ?> EUR<br/>
+                    </form>
+                </div> 
+            <?php
+            }
+            ?>
+        </div>
+        </div>
+    </body>
+</html>
+        
+        <?php
+}
+
 function orderinos($data) {
 ?>
 <html>
@@ -65,7 +145,7 @@ function orderinos($data) {
                 <div class="book<?= status($raw['status']) ?>">
                     <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
                         <input type="hidden" name="id" value="<?= $raw["id_book"] ?>" />
-                        <p><?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
+                        <p><?= $raw['quantity'] ?> <?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
                         <p><?= number_format($raw["price"], 2) ?> EUR<br/>
                     </form>
                 </div> 
@@ -130,8 +210,20 @@ if (isset($_POST['history'])) {
     orderinos($ord);
 }
 
+if (isset($_POST['admin_control']) && $_POST['admin_control'] == 'Order complete') {
+    DBOrders::orderFinished($_POST['id_order'], $_SESSION['user_id']);
+    $ord = DBOrders::getPending($_SESSION['user_id']);
+    getItDone($ord);
+}
+
+if (isset($_POST['admin_control']) && $_POST['admin_control'] == 'Cancel order') {
+    DBOrders::orderDeny($_POST['id_order'], $_SESSION['user_id']);
+    $ord = DBOrders::getPending($_SESSION['user_id']);
+    getItDone($ord);
+}
+
 if (isset($_POST['pending']) && ($_SESSION['user_status'] == 'seller' || $_SESSION['user_status'] == 'admin')) {
     $ord = DBOrders::getPending($_SESSION['user_id']);
-    var_dump($ord);
+    getItDone($ord);
 }
 
