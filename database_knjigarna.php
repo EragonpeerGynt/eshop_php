@@ -389,7 +389,7 @@ class DBOrders {
     
     public static function getPending($id) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE ord_items.id_seller = :id ORDER BY orders.canceled, orders.id_order, library.id_book ASC");
+        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE ord_items.id_seller = :id ORDER BY orders.canceled, ord_items.status, orders.id_order, library.id_book ASC");
         $statement->bindParam(":id", $id);
         $statement->execute();
         

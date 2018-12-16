@@ -77,9 +77,8 @@ function getItDone($data) {
                     </div>
                     <?php
                     echo "<br/><br/>";
-                    echo orderSubmited($raw['id_order'], $_SESSION['user_id']).'<br/>';
                     echo '<div class="order'. orderSubmited($raw['id_order'], $_SESSION['user_id']).'">';
-                    echo "order tracking number: ".$raw['id_order']."<br/>";
+                    echo "Order tracking number: ".$raw['id_order']."<br/>";
                     if (orderSubmited($raw['id_order'], $_SESSION['user_id']) == "") {    
                         ?>
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
@@ -94,8 +93,8 @@ function getItDone($data) {
                 <div class="book<?= status($raw['status']) ?>">
                     <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
                         <input type="hidden" name="id" value="<?= $raw["id_book"] ?>" />
-                        <p><?= $raw['quantity'] ?> <?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
-                        <p><?= number_format($raw["price"], 2) ?> EUR<br/>
+                        <p><?= $raw['quantity'] ?>x <?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
+                        <p><?= number_format($raw["price"]*$raw['quantity'], 2) ?> EUR<br/>
                     </form>
                 </div> 
             <?php
