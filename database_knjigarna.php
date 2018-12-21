@@ -12,8 +12,8 @@ class DBBooks {
 
         return $statement->fetchAll();
     }
-    
-    public static function getMyBooks($id) {
+
+        public static function getMyBooks($id) {
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_seller = :id");
         $statement->bindParam(":id", $id);
