@@ -16,7 +16,7 @@ class RESTclient {
     public static function index() {
         $prefix = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"]
                 . $_SERVER["REQUEST_URI"]."/";
-        echo ViewHelper::renderJSON(DBBooks::getAllBooks());
+        echo ViewHelper::renderJSON(DBBooks::getAllBooksURI($prefix));
     }
     
 }
