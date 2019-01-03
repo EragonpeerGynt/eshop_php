@@ -16,7 +16,7 @@ class DBBooks {
     public static function getAllBooksURI($prefix) {
         $db = DBInit::getInstance();
 
-        $statement = $db->prepare("SELECT library.id_book, library.title, library.description, library.price, author.author_name, library.hidden, CONCAT(:prefix, library.id_book) AS uri FROM library INNER JOIN author ON author.id_author = library.id_author ORDER BY library.id_book ASC");
+        $statement = $db->prepare("SELECT library.id_book AS id, author.author_name AS author, library.title AS title, library.price AS price, 2000 AS year, CONCAT(:prefix, library.id_book) AS uri FROM library INNER JOIN author ON author.id_author = library.id_author ORDER BY library.id_book ASC");
         $statement->bindParam(":prefix", $prefix);
         $statement->execute();
 
