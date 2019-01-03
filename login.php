@@ -21,6 +21,37 @@ session_start();
 $_SESSION['user'] = 'guest';
 session_regenerate_id();
 
+$validationRules = [
+    'u_name' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9]+$/"
+        ]
+    ],
+    'passwd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9]{4,}$/"
+        ]
+    ],
+    'passwd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9]{4,}$/"
+        ]
+    ],
+    'email' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/"
+        ]
+    ]
+    
+];
+
+//$data = filter_input_array(INPUT_POST, $validationRules);
+//$POST = filter_input_array(INPUT_POST, $validationRules);
+
 require_once 'database_knjigarna.php';
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 ?>
