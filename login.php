@@ -50,7 +50,7 @@ $validationRules = [
 ];
 
 //$data = filter_input_array(INPUT_POST, $validationRules);
-//$POST = filter_input_array(INPUT_POST, $validationRules);
+$_POST = filter_input_array(INPUT_POST, $validationRules);
 
 require_once 'database_knjigarna.php';
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
