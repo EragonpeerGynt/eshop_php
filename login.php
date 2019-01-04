@@ -25,19 +25,19 @@ $validationRules = [
     'u_name' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^[a-zA-Z0-9]+$/"
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
         ]
     ],
     'passwd' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^[a-zA-Z0-9]{4,}$/"
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
         ]
     ],
     'passwd' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^[a-zA-Z0-9]{4,}$/"
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
         ]
     ],
     'email' => [

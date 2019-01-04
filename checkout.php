@@ -7,25 +7,25 @@ function userSet($user) {
     return false;
 }
 
-function islegit() {
+function islegit($dat) {
     $errars['legit'] = 1;
-    if(!isset($_POST['name']) || $_POST['name'] == "") {
+    if(!isset($dat['name']) || $dat['name'] == "") {
         $errars['name'] = 1;
         $errars['legit'] = 0;
     }
-    if(!isset($_POST['surname']) || $_POST['surname'] == "") {
+    if(!isset($dat['surname']) || $dat['surname'] == "") {
         $errars['surname'] = 1;
         $errars['legit'] = 0;
     }
-    if(!isset($_POST['phone']) || $_POST['phone'] == "") {
+    if(!isset($dat['phone']) || $dat['phone'] == "") {
         $errars['phone'] = 1;
         $errars['legit'] = 0;
     }
-    if(!isset($_POST['street']) || $_POST['street'] == "") {
+    if(!isset($dat['street']) || $dat['street'] == "") {
         $errars['street'] = 1;
         $errars['legit'] = 0;
     }
-    if(!isset($_POST['postal_number']) || $_POST['postal_number'] == "") {
+    if(!isset($dat['postal_number']) || $dat['postal_number'] == "") {
         $errars['postal_number'] = 1;
         $errars['legit'] = 0;
     }
@@ -181,7 +181,71 @@ function gibBooks() {
 }
 
 session_start();
-//var_dump($_POST);
+$validationRules = [
+    'do' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            "regexp" => "/^(add_into_cart|update_cart|purge_cart)$/"
+        ]
+    ],
+    'id' => [
+        'filter' => FILTER_VALIDATE_INT,
+        'options' => ['min_range' => 0]
+    ],
+    'kolicina' => [
+        'filter' => FILTER_VALIDATE_INT,
+        'options' => ['min_range' => 0]
+    ],
+    'name' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'surname' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'phone' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]{9}$/"
+        ]
+    ],
+    'street' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[A-Ža-ž0-9 ]+$/"
+        ]
+    ],
+    'postal_number' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]{4}$/"
+        ]
+    ],
+    'postal_town' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'checkout' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^checkout$/"
+        ]
+    ],
+    'final' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^final$/"
+        ]
+    ]
+];
+$_POST = filter_input_array(INPUT_POST, $validationRules);
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
@@ -254,7 +318,7 @@ if (isset($_POST['checkout']) && isset($_SESSION['cart']) && $_SESSION['cart'] !
 }
 elseif (isset ($_POST['final']) && $_POST['final'] == 'final') {
     //echo "going to final stage";
-    $data = islegit();
+    $data = islegit($_POST);
     if ($data['legit'] == 1) {
         succEdit();
         gibBooks();

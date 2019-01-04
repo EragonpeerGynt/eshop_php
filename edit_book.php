@@ -163,7 +163,65 @@ function success($type) {
 }
 
 session_start();
-//var_dump($_POST);
+var_dump($_POST);
+
+$validationRules = [
+    'id_edit' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'id_book' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'author' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9 ]+$/"
+        ]
+    ],
+    'title' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9 \.\!\?\/\\\"]+$/"
+        ]
+    ],
+    'description' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9 \.\!\?\/\\\"]+$/"
+        ]
+    ],
+    'price' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+\.{0,1}[0-9]*$/"
+        ]
+    ],
+    'hidden' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^visible$/"
+        ]
+    ],
+    'push_book' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(new|old|del)$/"
+        ]
+    ],
+    'editorial' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ]
+];
+$_POST = filter_input_array(INPUT_POST, $validationRules);
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
