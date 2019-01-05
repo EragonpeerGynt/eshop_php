@@ -84,6 +84,10 @@ class DBBooks {
     
     public static function deleteBook($id) {
         $db = DBInit::getInstance();
+        $statement = $db->prepare("DELETE FROM ord_items WHERE id_book = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $db = DBInit::getInstance();
         $statement = $db->prepare("DELETE FROM library WHERE id_book = :id");
         $statement->bindParam(":id", $id);
         $statement->execute();

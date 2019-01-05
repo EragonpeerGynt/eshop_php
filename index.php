@@ -14,6 +14,24 @@ if(!isset($_SESSION['user'])) {
 
 require_once 'database_knjigarna.php';
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
+
+$validationRules = ['do' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            "regexp" => "/^(add_into_cart|update_cart|purge_cart)$/"
+        ]
+    ],
+    'id' => [
+        'filter' => FILTER_VALIDATE_INT,
+        'options' => ['min_range' => 0]
+    ],
+    'kolicina' => [
+        'filter' => FILTER_VALIDATE_INT,
+        'options' => ['min_range' => 0]
+    ]
+];
+$_POST = filter_input_array(INPUT_POST, $validationRules);
+
 //var_dump($_SESSION['cart']);
 if (isset($_POST['do'])) {
     if ($_POST['do'] == "add_into_cart") {

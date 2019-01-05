@@ -300,6 +300,7 @@ function add_user($prefix) {
             if ($prefix != "") {
                 echo $prefix . "<br/>";
             }
+            //var_dump($_POST)
             ?>
             <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
                 User name:<br/>
@@ -433,6 +434,113 @@ function islegit() {
 
 session_start();
 //var_dump($_POST);
+$validationRules = [
+    'name' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'surname' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'phone' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]{9}$/"
+        ]
+    ],
+    'street' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[A-Ža-ž0-9 ]+$/"
+        ]
+    ],
+    'postal_number' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]{4}$/"
+        ]
+    ],
+    'postal_town' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'editorial' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^Confirm$/"
+        ]
+    ],
+    'uname' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'passwd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
+        ]
+    ],
+    'email' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/"
+        ]
+    ],
+    'repasswd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
+        ]
+    ],
+    'another' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^1$/"
+        ]
+    ],
+    'submit' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(edit|ADD)$/"
+        ]
+    ],
+    'control' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'addition' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^new_user$/"
+        ]
+    ],
+    'editorial' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^find_user$/"
+        ]
+    ],
+    'bttn' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^Login$/"
+        ]
+    ]
+];
+//$data = filter_input_array(INPUT_POST, $validationRules);
+$_POST = filter_input_array(INPUT_POST, $validationRules);
+
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {

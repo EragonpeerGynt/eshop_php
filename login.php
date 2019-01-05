@@ -34,7 +34,7 @@ $validationRules = [
             'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
         ]
     ],
-    'passwd' => [
+    're-passwd' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
             'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
