@@ -7,7 +7,7 @@ class RESTclient {
 
     public static function get($id) {
         try {
-            echo ViewHelper::renderJSON(DBBooks::getBook($id));
+            echo ViewHelper::renderJSON(DBBooks::getBookwithURI($id));
         } catch (InvalidArgumentException $e) {
             echo ViewHelper::renderJSON($e->getMessage(), 404);
         }

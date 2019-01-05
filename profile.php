@@ -1,6 +1,6 @@
 <?php
 session_start();
-var_dump($_POST);
+//var_dump($_POST);
 $validationRules = [
     'username' => [
         'filter' => FILTER_VALIDATE_REGEXP,
@@ -78,7 +78,7 @@ $validationRules = [
 
 //$data = filter_input_array(INPUT_POST, $validationRules);
 $_POST = filter_input_array(INPUT_POST, $validationRules);
-var_dump($_POST);
+//var_dump($_POST);
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
     session_destroy();

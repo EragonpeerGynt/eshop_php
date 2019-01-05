@@ -219,6 +219,12 @@ $validationRules = [
         'options' => [
             'regexp' => "/^[a-žA-Ž0-9]+$/"
         ]
+    ],
+    'id_seller' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
     ]
 ];
 $_POST = filter_input_array(INPUT_POST, $validationRules);

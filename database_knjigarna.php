@@ -43,6 +43,19 @@ class DBBooks {
         
     }
     
+    
+    
+    public static function getBookwithURI($id) {
+        
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("SELECT library.id_book AS id, author.author_name AS author, library.title AS title, library.description AS description, library.price AS price, 2000 AS year FROM library INNER JOIN author ON author.id_author = library.id_author WHERE library.id_book = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+
+        return $statement->fetchAll()[0];
+        
+    }
+    
     public static function delBook($id) {
         $db = DBInit::getInstance();
         $statement = $db->prepare("DELETE FROM library WHERE id_book = :id");
