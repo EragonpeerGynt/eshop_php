@@ -492,7 +492,7 @@ $validationRules = [
     'email' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/"
+            'regexp' => "/^[a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\-]+$/"
         ]
     ],
     'repasswd' => [

@@ -145,7 +145,7 @@ function orderinos($data) {
                     <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
                         <input type="hidden" name="id" value="<?= $raw["id_book"] ?>" />
                         <p><?= $raw['quantity'] ?> <?= $raw["author_name"] ?> : <?= $raw["title"] ?></p>
-                        <p><?= number_format($raw["price"], 2) ?> EUR<br/>
+                        <p><?= number_format($raw["price"]*$raw['quantity'], 2) ?> EUR<br/>
                     </form>
                 </div> 
             <?php
@@ -189,6 +189,50 @@ function errorReport($error) {
 
 session_start();
 //var_dump($_POST);
+
+$validationRules = [
+    'history' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^1$/"
+        ]
+    ],
+    'id_order' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'admin_control' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(Order complete|Cancel order)$/"
+        ]
+    ],
+    'id' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'pending' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'terminate' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ]
+];
+
+//$data = filter_input_array(INPUT_POST, $validationRules);
+$_POST = filter_input_array(INPUT_POST, $validationRules);
+//var_dump($_POST);
+
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {

@@ -1,6 +1,84 @@
 <?php
 session_start();
-//var_dump($_POST);
+var_dump($_POST);
+$validationRules = [
+    'username' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'passwd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
+        ]
+    ],
+    'email' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\-]+$/"
+        ]
+    ],
+    'passwd1' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
+        ]
+    ],
+    'passwd2' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]{4,}$/"
+        ]
+    ],
+    'commit' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(username|passwd|email)$/"
+        ]
+    ],
+    'iden' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
+    ],
+    'edit' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'change' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(username|passwd|email)$/"
+        ]
+    ],
+    'user' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'passwd' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-žA-Ž0-9]+$/"
+        ]
+    ],
+    'mail' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\-]+$/"
+        ]
+    ]
+];
+
+//$data = filter_input_array(INPUT_POST, $validationRules);
+$_POST = filter_input_array(INPUT_POST, $validationRules);
+var_dump($_POST);
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
     session_destroy();
