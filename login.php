@@ -45,6 +45,12 @@ $validationRules = [
         'options' => [
             'regexp' => "/^[a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\-]+$/"
         ]
+    ],
+    'bttn' => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^(Register|Confirm)$/"
+        ]
     ]
     
 ];
@@ -55,6 +61,7 @@ $_POST = filter_input_array(INPUT_POST, $validationRules);
 require_once 'database_knjigarna.php';
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 ?>
+
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="styl.css">

@@ -211,7 +211,7 @@ $validationRules = [
     'phone' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^[0-9]{9}$/"
+            'regexp' => "/^[0-9]{8,9}$/"
         ]
     ],
     'street' => [

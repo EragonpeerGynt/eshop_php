@@ -111,7 +111,6 @@ if (isset($_POST['do'])) {
         
         <?php
         // put your code here
-        echo "Delam"
         ?>
         <br/>
         <div id="heder">

@@ -380,9 +380,8 @@ class DBOrders {
     public static function fractionOrder($id_order, $bukva, $quantity) {
         $id_seller = DBBooks::getBook($bukva)[0]['id_seller'];
         $db = DBInit::getInstance();
-        $statement = $db->prepare("INSERT INTO ord_items (id_order, id_seller, id_book, quantity) VALUES (:id_order, :id_seller, :id_book, :quantity)");
+        $statement = $db->prepare("INSERT INTO ord_items (id_order, id_book, quantity) VALUES (:id_order, :id_book, :quantity)");
         $statement->bindParam(":id_order", $id_order);
-        $statement->bindParam(":id_seller", $id_seller);
         $statement->bindParam(":id_book", $bukva);
         $statement->bindParam(":quantity", $quantity);
         $statement->execute();
@@ -416,7 +415,7 @@ class DBOrders {
     
     public static function getPending($id) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items on orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE ord_items.id_seller = :id ORDER BY orders.canceled, ord_items.status, orders.id_order, library.id_book ASC");
+        $statement = $db->prepare("SELECT orders.id_order, library.id_book, library.title, author.author_name, ord_items.quantity, library.price, ord_items.status, orders.canceled FROM orders INNER JOIN ord_items ON orders.id_order = ord_items.id_order INNER JOIN library ON ord_items.id_book = library.id_book INNER JOIN author ON author.id_author = library.id_author WHERE library.id_seller = :id ORDER BY orders.canceled, ord_items.status, orders.id_order, library.id_book ASC");
         $statement->bindParam(":id", $id);
         $statement->execute();
         
@@ -450,7 +449,7 @@ class DBOrders {
     
     public static function doingMyPart($id_seller, $id_order) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("SELECT * FROM ord_items WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement = $db->prepare("SELECT * FROM ord_items INNER JOIN library ON ord_items.id_book = library.id_book WHERE ord_items.id_order = :id_order AND library.id_seller = :id_seller");
         $statement->bindParam(":id_order", $id_order);
         $statement->bindParam(":id_seller", $id_seller);
         $statement->execute();
