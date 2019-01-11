@@ -96,6 +96,13 @@ textarea {
     top:30%;
 }
 
+#login--special {
+    position:absolute;
+    width: 100%;
+    text-align: center;
+    top:30px;
+}
+
 .succ {
     color:#00ff00;
 }
@@ -155,6 +162,11 @@ h3 {
     top: 10px;
     left: 10px;
     margin: 20px;
+}
+
+#edit--special {
+    position: fixed;
+    right: 10px;
 }
 .vozi {
     padding: 1em;

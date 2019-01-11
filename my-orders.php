@@ -66,6 +66,11 @@ function getItDone($data) {
         <title>e-knjigarna</title>
     </head>
     <body>
+        <div id="edit edit--special">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+        </div>
         <div id="main">
             <div>
             <?php
@@ -82,7 +87,7 @@ function getItDone($data) {
                     if (orderSubmited($raw['id_order'], $_SESSION['user_id']) == "") {    
                         ?>
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
-                            <input type="hidden" name="history" value="1">
+                            <input type="hidden" name="pending" value="<?= $_SESSION['user_id'] ?>">
                             <input type="hidden" name="id_order" value="<?= $raw['id_order'] ?>">
                             <input type="submit" name="admin_control" value="Order complete"><input type="submit" name="admin_control" value="Cancel order">
                         </form>
@@ -117,6 +122,11 @@ function orderinos($data) {
         <title>e-knjigarna</title>
     </head>
     <body>
+        <div id="edit edit--special">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+        </div>
         <div id="main">
             <div>
             <?php
@@ -247,7 +257,7 @@ if (isset($_POST['terminate'])) {
     DBOrders::cancelOrder($_POST['terminate']);
 }
 
-if (isset($_POST['history'])) {
+if (isset($_POST['history']) && ($_SESSION['user_status'] != 'seller' || $_SESSION['user_status'] != 'admin')) {
     $ord = DBOrders::getHistory($_SESSION['user_id']);
     //var_dump($ord);
     orderinos($ord);

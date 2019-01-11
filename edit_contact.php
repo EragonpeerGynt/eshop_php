@@ -295,6 +295,11 @@ function add_user($prefix) {
         </head>
         
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="login">
             <?php
             if ($prefix != "") {
@@ -339,6 +344,11 @@ function listUser() {
             <title>Users</title>
         </head>
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="user">
                 <?php
 

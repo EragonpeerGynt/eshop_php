@@ -69,6 +69,11 @@ $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
         <title>Login</title>
     </head>
     <body>
+        <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+        </div>
         <?php
         //var_dump($_POST);
             //registracija novegauporabnika

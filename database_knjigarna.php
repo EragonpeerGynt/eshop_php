@@ -424,7 +424,7 @@ class DBOrders {
     
     public static function orderFinished($id_order, $id_seller) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("UPDATE ord_items SET status = 1 WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement = $db->prepare("UPDATE ord_items INNER JOIN library ON library.id_book = ord_items.id_book SET ord_items.status = 1 WHERE ord_items.id_order = :id_order AND library.id_seller = :id_seller");
         $statement->bindParam(":id_order", $id_order);
         $statement->bindParam(":id_seller", $id_seller);
         $statement->execute();
@@ -432,7 +432,7 @@ class DBOrders {
     
     public static function orderDeny($id_order, $id_seller) {
         $db = DBInit::getInstance();
-        $statement = $db->prepare("UPDATE ord_items SET status = 2 WHERE id_order = :id_order AND id_seller = :id_seller");
+        $statement = $db->prepare("UPDATE ord_items INNER JOIN library ON library.id_book = ord_items.id_book SET ord_items.status = 2 WHERE ord_items.id_order = :id_order AND library.id_seller = :id_seller");
         $statement->bindParam(":id_order", $id_order);
         $statement->bindParam(":id_seller", $id_seller);
         $statement->execute();

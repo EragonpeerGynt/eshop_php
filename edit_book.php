@@ -9,6 +9,11 @@ function overview($my_books) {
             <title>My books</title>
         </head>
         <body>
+            <div id="edit edit--special">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="main">
                 <?php foreach ($my_books as $tmp => $knjiga): ?>
                     <div class="book">
@@ -70,6 +75,11 @@ function editbook($book) {
             <title>Edit: <?= $book['title'] ?></title>
         </head>
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="login">
                 <h1>Edit book</h1>
                 <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
@@ -113,6 +123,11 @@ function addBook() {
             <title>Add book</title>
         </head>
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="login">
                 <h1>Add book</h1>
                 <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">

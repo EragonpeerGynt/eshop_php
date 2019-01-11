@@ -112,6 +112,11 @@ else if (isset($_POST['change']) && $_POST['change'] != "") { ?>
             <title>Profile</title>
         </head>
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
             <div id="login">
             <?php
             if($_POST['change'] == 'username') {
@@ -284,9 +289,13 @@ else {
                 </div>
                 
                 <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
                     <form action="./edit_contact.php" method="post">
                         <button type="submit" name="editorial" value="<?= $_SESSION['user_id'] ?>">Edit contact<br/>information</button><br/>
                     </form>
+                    
                     <?php
                     if ($_SESSION['user_status'] == 'user') {
                     ?>

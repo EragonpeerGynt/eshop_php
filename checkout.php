@@ -42,6 +42,12 @@ function checkingBuy($user) {
             <title>Checkout</title>
         </head>
         <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
+            <div id="login--special">
             <?php
             $s_cart = isset($_SESSION["cart"]) ? $_SESSION["cart"] : [];
             if ($s_cart) {
@@ -143,6 +149,7 @@ function checkingBuy($user) {
                     <input type="submit" name="editorial" value="Confirm"/><br/>
                 </form>
             </div>
+            </div>
         </body>
     </html>
     <?php
@@ -181,6 +188,7 @@ function gibBooks() {
 }
 
 session_start();
+
 $validationRules = [
     'do' => [
         'filter' => FILTER_VALIDATE_REGEXP,
