@@ -414,7 +414,10 @@ function listUser() {
                         <p>New user</p>
                         <button type="submit">ADD</button>
                     </form>
-                </div>  
+                </div>
+                <?php
+                if (isset($_SESSION['user_status']) && $_SESSION['user_status'] == 'admin'){
+                ?>
                 <div class="singleU">
                     <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
                         <input type="hidden" name="addition" value="new_seller" />
@@ -422,6 +425,9 @@ function listUser() {
                         <button type="submit">ADD</button>
                     </form>
                 </div>  
+                <?php
+                }
+                ?>
             </div>
         </body>    
     <?php
