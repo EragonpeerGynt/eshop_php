@@ -206,6 +206,18 @@ class DBUsers {
         $statement->execute();
     }
     
+    public static function registerSeller($name, $passwd, $mail, $hash) {
+        $db = DBInit::getInstance();
+        $statement = $db->prepare("INSERT INTO user (u_name, u_pass, email, hash, status) VALUES (:u_name, :u_pass, :mail, :hash, 'seller')");
+        $statement->bindParam(":u_name", $name);
+        $salt = $name . $mail;
+        $passwd_hash = crypt($passwd, $salt);
+        $statement->bindParam(":u_pass", $passwd_hash);
+        $statement->bindParam(":mail", $mail);
+        $statement->bindParam(":hash", $hash);
+        $statement->execute();
+    }
+    
     public static function getData($id) {
         $db = DBInit::getInstance();
         $statement = $db->prepare("SELECT u_name, email, hash, status FROM user WHERE id_shopper = :id");

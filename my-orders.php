@@ -93,6 +93,15 @@ function getItDone($data) {
                         </form>
                         <?php
                     }
+                    elseif (orderSubmited($raw['id_order'], $_SESSION['user_id']) == " order--complete") {
+                        ?>
+                        <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                            <input type="hidden" name="pending" value="<?= $_SESSION['user_id'] ?>">
+                            <input type="hidden" name="id_order" value="<?= $raw['id_order'] ?>">
+                            <input type="submit" name="admin_control" value="Cancel order">
+                        </form>
+                        <?php
+                    }
                 }
                 ?>
                 <div class="book<?= status($raw['status']) ?>">
@@ -245,7 +254,7 @@ $_POST = filter_input_array(INPUT_POST, $validationRules);
 
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
-if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
+if(!isset($_SESSION['user']) || !isset($_SESSION['user_id']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
     session_destroy();
     errorReport("");
     exit();
@@ -257,7 +266,7 @@ if (isset($_POST['terminate'])) {
     DBOrders::cancelOrder($_POST['terminate']);
 }
 
-if (isset($_POST['history']) && ($_SESSION['user_status'] != 'seller' || $_SESSION['user_status'] != 'admin')) {
+if (isset($_POST['history']) && ($_SESSION['user_status'] != 'seller' && $_SESSION['user_status'] != 'admin')) {
     $ord = DBOrders::getHistory($_SESSION['user_id']);
     //var_dump($ord);
     orderinos($ord);
@@ -269,13 +278,13 @@ if (isset($_POST['admin_control']) && $_POST['admin_control'] == 'Order complete
     getItDone($ord);
 }
 
-if (isset($_POST['admin_control']) && $_POST['admin_control'] == 'Cancel order') {
+elseif (isset($_POST['admin_control']) && $_POST['admin_control'] == 'Cancel order') {
     DBOrders::orderDeny($_POST['id_order'], $_SESSION['user_id']);
     $ord = DBOrders::getPending($_SESSION['user_id']);
     getItDone($ord);
 }
 
-if (isset($_POST['pending']) && ($_SESSION['user_status'] == 'seller' || $_SESSION['user_status'] == 'admin')) {
+elseif (isset($_POST['pending']) && ($_SESSION['user_status'] == 'seller' || $_SESSION['user_status'] == 'admin')) {
     $ord = DBOrders::getPending($_SESSION['user_id']);
     getItDone($ord);
 }

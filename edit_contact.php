@@ -324,6 +324,47 @@ function add_user($prefix) {
     <?php
 }
 
+function add_seller($prefix) {
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Registration</title>
+        </head>
+        
+        <body>
+            <div id="edit">
+                    <form action="./index.php" method="post">
+                        <button type="submit" name="go" value="go">Home</button><br/>
+                    </form>
+            </div>
+            <div id="login">
+            <?php
+            if ($prefix != "") {
+                echo $prefix . "<br/>";
+            }
+            //var_dump($_POST)
+            ?>
+            <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                User name:<br/>
+                <input type="text" name="uname" placeholder="user name" required=><br/>
+                Password<br/>
+                <input type="password" name="passwd" placeholder="password" required><br/>
+                Re-type password<br/>
+                <input type="password" name="repasswd" placeholder="password" required><br/>
+                E-mail<br/>
+                <input type="text" name="email" placeholder="abc@def.com" required><br/>
+                Digital certificate hash<br/>
+                <input type="text" name="hash" placeholder="12345678" required><br/>
+                <button type="submit" name="another" value="2">REGISTER</button>
+            </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
 function listUser() {
     if ($_SESSION['user_status'] == 'admin') {
         $operation = DBUsers::returnAllUsers();
@@ -374,6 +415,13 @@ function listUser() {
                         <button type="submit">ADD</button>
                     </form>
                 </div>  
+                <div class="singleU">
+                    <form action="<?= $_SERVER["PHP_SELF"]?>" method="post">
+                        <input type="hidden" name="addition" value="new_seller" />
+                        <p>New seller</p>
+                        <button type="submit">ADD</button>
+                    </form>
+                </div>  
             </div>
         </body>    
     <?php
@@ -382,6 +430,30 @@ function listUser() {
 
 function additionU() {
     DBUsers::registerUser($_POST['uname'], $_POST['passwd'], $_POST['email']);
+    ?>
+    <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="styl.css">
+            <meta charset="UTF-8" />
+            <title>Users</title>
+        </head>
+        <body>
+            <div id="login">
+                <div class="succ">
+                    registration was successful<br/>
+                </div>
+                <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                    <input type="hidden" name="editorial" value="find_user">
+                    <input type="submit" name="bttn" value="Login" /><br/>
+                </form>
+            </div>
+        </body>
+    </html>
+    <?php
+}
+
+function additionS() {
+    DBUsers::registerSeller($_POST['uname'], $_POST['passwd'], $_POST['email'], $_POST['hash']);
     ?>
     <html>
         <head>
@@ -514,7 +586,7 @@ $validationRules = [
     'another' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^1$/"
+            'regexp' => "/^(1|2)$/"
         ]
     ],
     'submit' => [
@@ -532,7 +604,7 @@ $validationRules = [
     'addition' => [
         'filter' => FILTER_VALIDATE_REGEXP,
         'options' => [
-            'regexp' => "/^new_user$/"
+            'regexp' => "/^(new_user|new_seller)$/"
         ]
     ],
     'editorial' => [
@@ -546,11 +618,17 @@ $validationRules = [
         'options' => [
             'regexp' => "/^Login$/"
         ]
+    ],
+    'hash'  => [
+        'filter' => FILTER_VALIDATE_REGEXP,
+        'options' => [
+            'regexp' => "/^[0-9]+$/"
+        ]
     ]
 ];
 //$data = filter_input_array(INPUT_POST, $validationRules);
 $_POST = filter_input_array(INPUT_POST, $validationRules);
-
+//var_dump($_POST);
 $url = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
 require_once 'database_knjigarna.php';
 if(!isset($_SESSION['user']) || ($_SESSION['user'] == "guest" && $_SESSION['user_id'] == 'guest')) {
@@ -576,12 +654,25 @@ elseif (isset($_POST['addition']) && $_POST['addition'] == 'new_user') {
     add_user("");
 }
 
-elseif (isset ($_POST['another'])) {
+elseif (isset($_POST['addition']) && $_POST['addition'] == 'new_seller') {
+    add_seller("");
+}
+
+elseif (isset ($_POST['another']) && $_POST['another'] == 1) {
     if(dataOk()) {
         additionU();
     }
     else {
         add_user("Not all data set correctly");
+    }
+}
+
+elseif (isset ($_POST['another']) && $_POST['another'] == 2) {
+    if(dataOk()) {
+        additionS();
+    }
+    else {
+        add_seller("Not all data set correctly");
     }
 }
 
